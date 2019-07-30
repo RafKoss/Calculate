@@ -14,7 +14,7 @@ Tree::~Tree()
 {
 }
 
-void Tree::insert(std::string data) //zmerguj te dwa insert!
+void Tree::insert(std::string data)
 {
 	if (root == nullptr)
 	{
@@ -27,7 +27,7 @@ void Tree::insert(std::string data) //zmerguj te dwa insert!
 }
 
 
-void Tree::insert(std::string data, Node * node) // paramet node niepotrzebny?
+void Tree::insert(std::string data, Node * node)
 {
 	if (lastPushed->isSign() == true) //jeœli ostatnio wstawiono znak, to wstawiamy wg³¹b
 	{
@@ -37,8 +37,6 @@ void Tree::insert(std::string data, Node * node) // paramet node niepotrzebny?
 			node->setLeft(tempNode);
 			tempNode->setParent(node);
 			lastPushed = tempNode;
-			//delete tempNode;
-			//return?
 		}
 		else if (node->getRight() == nullptr)
 		{
@@ -46,7 +44,6 @@ void Tree::insert(std::string data, Node * node) // paramet node niepotrzebny?
 			node->setRight(tempNode);
 			tempNode->setParent(node);
 			lastPushed = tempNode;
-			//delete tempNode;
 		}
 		else
 		{

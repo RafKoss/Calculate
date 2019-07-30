@@ -5,12 +5,15 @@
 #include "Tree.h"
 #include <string>
 #include <fstream>
+#include <sstream>
 #include <vector>
 using namespace std;
 
 bool valid(string);
 
 bool isNumber(string);
+
+bool isArgument(string);
 
 string searchBracket(string);
 
@@ -24,31 +27,24 @@ int main()
 {
 	vector<string> dataVector;
 	string temp;
-	/*string znak;
-	int numer = 0;
-	znak = "++";
-	
-	if (znak == "*" || znak == "/" || znak == "+" || znak == "-")
-		cout << "Oto ZNAK: " << znak << endl;
-	else
-	{
-		numer = stoi(znak);
-		cout << "Oto LICZBA: " << numer << endl;
-	}
-		
-
-	cout << ++numer;*/
 	//pobieranie danych z pliku
 	ifstream file;
 	file.open("input.txt", ifstream::in);
 	if (file.is_open())
 	{
-		while (getline(file, temp, ' '))
+		getline(file, temp);
+		stringstream line(temp);
+
+		while (getline(line, temp, ' '))
 		{
 			if (!valid(temp))
 			{
 				cout << "Nieprawidlowe dane\n";
 				return 0;
+			}
+			if (isArgument(temp))
+			{
+				getline(file, temp);
 			}
 
 			dataVector.push_back(temp);
@@ -75,14 +71,6 @@ int main()
 	}
 
 
-	
-	/*MyTree.insert("+");
-	MyTree.insert("*");
-	MyTree.insert("+");
-	MyTree.insert("1");
-	MyTree.insert("2");
-	MyTree.insert("3");
-	MyTree.insert("4");*/
 	binaryTree.print();
 
 	binaryTree.readInfix();
@@ -98,25 +86,6 @@ int main()
 			cout << expression[i];
 		}
 	}
-	/*expression = searchBracket(expression);
-	cout << endl;
-	for (int i = 0; i < expression.size(); i++)
-	{
-		cout << expression[i];
-	}
-	expression = searchBracket(expression);
-	cout << endl;
-	for (int i = 0; i < expression.size(); i++)
-	{
-		cout << expression[i];
-	}
-	expression = searchBracket(expression);
-	cout << endl;
-	for (int i = 0; i < expression.size(); i++)
-	{
-		cout << expression[i];
-	}*/
-	//cout<<endl<<binaryTree.calculate();
 }
 
 bool valid(string str)
@@ -137,6 +106,13 @@ bool isNumber(string str)
 			return false;
 	}
 	return true;
+}
+
+bool isArgument(string str)
+{
+	if (str == "x")
+		return true;
+	return false;
 }
 
 string searchBracket(string str)
