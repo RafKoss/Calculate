@@ -48,7 +48,6 @@ int main()
 			}
 
 			dataVector.push_back(temp);
-			//cout << temp << endl;
 		}
 		if(!(dataVector[0] == "+" || dataVector[0] == "-" || dataVector[0] == "*" || dataVector[0] == "/")) //pierwszy znak nie jest operatorem
 			{
