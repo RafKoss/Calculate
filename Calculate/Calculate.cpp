@@ -3,27 +3,15 @@
 
 #include "pch.h"
 #include "Tree.h"
+#include "Functions.h"
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <vector>
+
 using namespace std;
 
-bool valid(string);
-
-bool isNumber(string);
-
-bool isArgument(string);
-
-string searchBracket(string);
-
-int searchOperator(string);
-
-int calculate(string, string, char);
-
-string editString(string str, int begin, int end, int value);
-
-int main()
+int main(int argc, char*argv[])
 {
 	vector<string> dataVector;
 	string temp;
@@ -51,7 +39,7 @@ int main()
 		}
 		if(!(dataVector[0] == "+" || dataVector[0] == "-" || dataVector[0] == "*" || dataVector[0] == "/")) //pierwszy znak nie jest operatorem
 			{
-					cout << "Nieprawidlowe dane\n";
+					cout << "Nieprawidlowe wyrazenie\n";
 					return 0;
 			}
 			
@@ -62,6 +50,19 @@ int main()
 		cout << "Blad otwarcia pliku\n";
 	}
 	
+	if (!checkExpression(dataVector))
+	{
+		cout << "Nieprawidlowe wyrazenie";
+		return 0;
+	}
+
+	cout << "Wstepne wyrazenie prefix:\n";
+	for (int i = 0; i < dataVector.size(); i++)
+	{
+		cout<<dataVector[i]<<" ";
+	}
+	
+
 	//wpisywanie danych do drzewa
 	Tree binaryTree = Tree();
 	for (int i = 0; i < dataVector.size(); i++)
@@ -69,125 +70,28 @@ int main()
 		binaryTree.insert(dataVector[i]);
 	}
 
-
+	cout << "\n\nDrzewo:";
 	binaryTree.print();
 
+	cout << "\n\nWyrazanie infix:\n";
 	binaryTree.readInfix();
 
 	string expression = binaryTree.getInfix();
 
+	cout << "\n\nPrzetwarzanie wyrazenia:";
 	while (!isNumber(expression))
 	{
-		expression = searchBracket(expression);
+		expression = reduceExpression(expression);
 		cout << endl;
 		for (int i = 0; i < expression.size(); i++)
 		{
 			cout << expression[i];
 		}
 	}
-}
 
-bool valid(string str)
-{
-	if (str == "+" || str == "-" || str == "*" || str == "/" || str == "x")
-		return true;
-	else if (isNumber(str))
-		return true;
-
-	return false;
-}
-
-bool isNumber(string str)
-{
-	for (int i = 0; i < str.size(); i++)
+	cout << "\n\nWynik wyrazenia:\n";
+	for (int i = 0; i < expression.size(); i++)
 	{
-		if (!isdigit(str[i]))
-			return false;
+		cout << expression[i];
 	}
-	return true;
-}
-
-bool isArgument(string str)
-{
-	if (str == "x")
-		return true;
-	return false;
-}
-
-string searchBracket(string str)
-{
-	int begin = 0;
-	int end = 0;
-	for (int i = 0; i < str.size(); i++)
-	{
-		if (str[i] == '(')
-		{
-			begin = i;
-		}
-
-		if (str[i] == ')')
-		{
-			end = i;
-			break;
-		}
-	}
-	string innerStr;
-	if (begin == 0 && end == 0)
-	{
-		innerStr = str;
-		end = str.length();
-	}
-	else
-		innerStr = str.substr(begin + 1, end - begin - 1);	
-	string result = editString(str, begin, end, searchOperator(innerStr));
-	return result;
-}
-
-int searchOperator(string str)
-{
-	int position = 0;
-	for (int i = 0; i < str.size(); i++)
-	{
-		if (str[i] == '*' || str[i] == '/' || str[i] == '+' || str[i] == '-')
-		{
-			position = i;
-			break;
-		}
-	}
-
-	string str1 = str.substr(0, position); //pierwsza liczba
-	string str2 = str.substr(position+1); //druga liczba
-	char sign = str[position];
-	
-	return calculate(str1, str2, sign);
-}
-
-int calculate(string str1, string str2, char sign)
-{
-	int a = stoi(str1);
-	int b = stoi(str2);
-	int result = 0;
-
-	switch (sign)
-	{
-	case '+':
-		result = a + b;
-		break;
-	case '-':
-		result = a - b;
-		break;
-	case '*':
-		result = a * b;
-		break;
-	case '/':
-		result = a / b;
-		break;
-	}
-
-	return result;
-}
-string editString(string str, int begin, int end, int value)
-{
-	str.replace(begin, end-begin+1, to_string(value));
-	return str;
 }
